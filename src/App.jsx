@@ -1,10 +1,11 @@
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   Building2, ShieldCheck, Home, MessageCircle, Menu, X, MapPin, Phone, Mail,
   Layers, Brush, Triangle, Paintbrush, Scissors, Grid2X2, Wrench, ArrowRight,
-  CheckCircle2, Users, Clock, Star
+  CheckCircle2, Users, Clock, Star,
+  Tag, Coffee, Box, Hammer, Settings
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import hero from './assets/hero-escuadra.jpeg'
 import logo from './assets/logo-escuadra.jpeg'
 
@@ -13,7 +14,228 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } }
 }
 
-function Header() {
+// ─────────────────────────────────────────────────────────────
+// QUOTE WIZARD
+// ─────────────────────────────────────────────────────────────
+const RESIDENTIAL_SERVICES = [
+  { id: 'new-home',  icon: <Home size={22} />,      label: 'Casa Nueva',    sub: 'Construcción completa desde cero' },
+  { id: 'addition',  icon: <Building2 size={22} />,  label: 'Ampliación',    sub: 'Agrega espacio a tu hogar' },
+  { id: 'remodel',   icon: <Hammer size={22} />,     label: 'Remodelación',  sub: 'Transforma tu espacio actual' },
+  { id: 'kitchen',   icon: <Grid2X2 size={22} />,    label: 'Cocina & Baño', sub: 'Actualiza los espacios clave' },
+  { id: 'flooring',  icon: <Scissors size={22} />,   label: 'Pisos',         sub: 'Cerámicas, porcelanato y más' },
+  { id: 'painting',  icon: <Paintbrush size={22} />, label: 'Pintura',       sub: 'Interior y exterior' },
+  { id: 'roofing',   icon: <Triangle size={22} />,   label: 'Techo',         sub: 'Instalación y reparación' },
+  { id: 'stucco',    icon: <Brush size={22} />,      label: 'Estuco',        sub: 'Acabados exteriores' },
+]
+
+const COMMERCIAL_SERVICES = [
+  { id: 'offices',    icon: <Building2 size={22} />,  label: 'Oficinas',      sub: 'Espacios modernos y funcionales' },
+  { id: 'retail',     icon: <Tag size={22} />,         label: 'Retail / Tienda',sub: 'Locales y espacios comerciales' },
+  { id: 'restaurant', icon: <Coffee size={22} />,      label: 'Restaurante',   sub: 'Cocinas y salones de servicio' },
+  { id: 'warehouse',  icon: <Box size={22} />,          label: 'Bodega',        sub: 'Industrial y almacenamiento' },
+  { id: 'buildout',   icon: <Hammer size={22} />,       label: 'Build-Out',     sub: 'Construcción de interiores' },
+  { id: 'concrete',   icon: <Layers size={22} />,       label: 'Concreto',      sub: 'Losas, columnas y estructuras' },
+  { id: 'framing',    icon: <Triangle size={22} />,     label: 'Framing',       sub: 'Estructuras de madera y metal' },
+  { id: 'maint',      icon: <Settings size={22} />,     label: 'Mantenimiento', sub: 'Reparaciones y mejoras' },
+]
+
+function QuoteWizard({ onClose }) {
+  const [step, setStep] = useState(1)
+  const [category, setCategory] = useState(null)
+  const [selected, setSelected] = useState([])
+  const [form, setForm] = useState({ name: '', contact: '', location: '', message: '' })
+  const [sent, setSent] = useState(false)
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
+  const services = category === 'residential' ? RESIDENTIAL_SERVICES : COMMERCIAL_SERVICES
+
+  const toggle = (id) =>
+    setSelected(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id])
+
+  const pickCategory = (cat) => {
+    setCategory(cat)
+    setSelected([])
+    setStep(2)
+  }
+
+  const handleSend = (e) => {
+    e.preventDefault()
+    setSent(true)
+  }
+
+  return (
+    <motion.div
+      className="wizard-overlay"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      onClick={e => e.target === e.currentTarget && onClose()}
+    >
+      <motion.div
+        className="wizard-box"
+        initial={{ opacity: 0, y: 36, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 24, scale: 0.97 }}
+        transition={{ duration: 0.38, ease: 'easeOut' }}
+      >
+        {/* Header */}
+        <div className="wizard-header">
+          <div className="wizard-brand">
+            <img src={logo} alt="Escuadra" />
+            <span>Escuadra Builders Group</span>
+          </div>
+          {!sent && (
+            <div className="wizard-steps">
+              {[1, 2, 3].map((n, i) => (
+                <span key={n} className="wizard-steps-chunk">
+                  <div className={`wstep-dot${step >= n ? ' active' : ''}`}>{n}</div>
+                  {i < 2 && <div className={`wstep-line${step > n ? ' active' : ''}`} />}
+                </span>
+              ))}
+            </div>
+          )}
+          <button className="wizard-close" onClick={onClose} aria-label="Cerrar"><X size={18} /></button>
+        </div>
+
+        {/* Body */}
+        <div className="wizard-body">
+          <AnimatePresence mode="wait">
+
+            {/* SUCCESS */}
+            {sent && (
+              <motion.div key="sent" className="wizard-success"
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+                <CheckCircle2 size={52} />
+                <h2>¡Solicitud enviada!</h2>
+                <p>Nos comunicaremos contigo en las próximas horas para revisar tu proyecto y darte un presupuesto.</p>
+                <button className="btn btn-sand" onClick={onClose}>Cerrar</button>
+              </motion.div>
+            )}
+
+            {/* STEP 1 — Categoría */}
+            {!sent && step === 1 && (
+              <motion.div key="s1" className="wizard-step"
+                initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.28 }}>
+                <span className="wiz-eyebrow">Paso 1 de 3</span>
+                <h2>¿Qué tipo de<br />proyecto tienes?</h2>
+                <p className="wiz-sub">Selecciona la categoría que mejor describe lo que buscas.</p>
+                <div className="cat-grid">
+                  <button className="cat-card" onClick={() => pickCategory('residential')}>
+                    <div className="cat-img-wrap">
+                      <img src={hero} alt="Residencial" />
+                      <div className="cat-img-overlay" />
+                    </div>
+                    <div className="cat-body">
+                      <div className="cat-icon"><Home size={26} /></div>
+                      <strong>RESIDENCIAL</strong>
+                      <span>Casas nuevas, remodelaciones, ampliaciones, cocinas, baños y acabados del hogar.</span>
+                      <div className="cat-cta">Ver opciones <ArrowRight size={14} /></div>
+                    </div>
+                  </button>
+                  <button className="cat-card" onClick={() => pickCategory('commercial')}>
+                    <div className="cat-img-wrap">
+                      <img src={hero} alt="Comercial" />
+                      <div className="cat-img-overlay" />
+                    </div>
+                    <div className="cat-body">
+                      <div className="cat-icon"><Building2 size={26} /></div>
+                      <strong>COMERCIAL</strong>
+                      <span>Oficinas, tiendas, restaurantes, bodegas, build-outs y construcciones comerciales.</span>
+                      <div className="cat-cta">Ver opciones <ArrowRight size={14} /></div>
+                    </div>
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* STEP 2 — Servicios */}
+            {!sent && step === 2 && (
+              <motion.div key="s2" className="wizard-step"
+                initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.28 }}>
+                <span className="wiz-eyebrow">
+                  Paso 2 de 3 — {category === 'residential' ? 'Residencial' : 'Comercial'}
+                </span>
+                <h2>¿Qué necesitas?</h2>
+                <p className="wiz-sub">Selecciona uno o más servicios. Puedes elegir varios a la vez.</p>
+                <div className="svc-grid">
+                  {services.map(s => (
+                    <button
+                      key={s.id}
+                      className={`svc-option${selected.includes(s.id) ? ' selected' : ''}`}
+                      onClick={() => toggle(s.id)}
+                    >
+                      <div className="svc-icon-box">{s.icon}</div>
+                      <div className="svc-text">
+                        <strong>{s.label}</strong>
+                        <span>{s.sub}</span>
+                      </div>
+                      <div className="svc-check"><CheckCircle2 size={16} /></div>
+                    </button>
+                  ))}
+                </div>
+                <div className="wiz-nav">
+                  <button className="wiz-back" onClick={() => { setStep(1); setCategory(null) }}>← Atrás</button>
+                  <button
+                    className={`btn btn-sand${selected.length === 0 ? ' wiz-disabled' : ''}`}
+                    disabled={selected.length === 0}
+                    onClick={() => setStep(3)}
+                  >
+                    Continuar{selected.length > 0 ? ` (${selected.length})` : ''} →
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* STEP 3 — Formulario */}
+            {!sent && step === 3 && (
+              <motion.div key="s3" className="wizard-step"
+                initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.28 }}>
+                <span className="wiz-eyebrow">Paso 3 de 3 — Tu solicitud</span>
+                <h2>¿Cómo te<br />contactamos?</h2>
+                <div className="selection-pills">
+                  <span className="pill-cat">{category === 'residential' ? 'Residencial' : 'Comercial'}</span>
+                  {selected.map(id => {
+                    const s = services.find(x => x.id === id)
+                    return s ? <span key={id} className="pill-svc">{s.label}</span> : null
+                  })}
+                </div>
+                <form className="wiz-form" onSubmit={handleSend}>
+                  <div className="wf-row">
+                    <input required placeholder="Nombre completo" value={form.name}
+                      onChange={e => setForm({ ...form, name: e.target.value })} />
+                    <input required placeholder="Teléfono o email" value={form.contact}
+                      onChange={e => setForm({ ...form, contact: e.target.value })} />
+                  </div>
+                  <input placeholder="Ciudad / Ubicación del proyecto" value={form.location}
+                    onChange={e => setForm({ ...form, location: e.target.value })} />
+                  <textarea rows={4}
+                    placeholder="Cuéntanos más sobre tu proyecto (medidas, materiales, fechas...)"
+                    value={form.message}
+                    onChange={e => setForm({ ...form, message: e.target.value })} />
+                  <div className="wiz-nav">
+                    <button type="button" className="wiz-back" onClick={() => setStep(2)}>← Atrás</button>
+                    <button type="submit" className="btn btn-sand">Enviar solicitud →</button>
+                  </div>
+                </form>
+              </motion.div>
+            )}
+
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────
+// HEADER
+// ─────────────────────────────────────────────────────────────
+function Header({ openQuote }) {
   const [open, setOpen] = useState(false)
   const links = [
     { label: 'HOGAR', href: '#home' },
@@ -35,7 +257,9 @@ function Header() {
         {links.map(l => (
           <a key={l.label} href={l.href} onClick={() => setOpen(false)}>{l.label}</a>
         ))}
-        <a className="nav-cta" href="#contact" onClick={() => setOpen(false)}>SOLICITA UN PRESUPUESTO</a>
+        <button className="nav-cta" onClick={() => { setOpen(false); openQuote() }}>
+          SOLICITA UN PRESUPUESTO
+        </button>
       </nav>
       <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Menu">
         {open ? <X size={26} /> : <Menu size={26} />}
@@ -44,12 +268,10 @@ function Header() {
   )
 }
 
-function Hero() {
-  const panels = [
-    { num: '01', title: 'STRUCTURED EXECUTION', desc: 'Professional coordination and real project supervision.' },
-    { num: '02', title: 'SPECIALIZED CREWS', desc: 'Experienced teams for residential and commercial projects.' },
-    { num: '03', title: 'PREMIUM FINISHES', desc: 'Modern construction with attention to detail.' },
-  ]
+// ─────────────────────────────────────────────────────────────
+// HERO — Selector de categoría integrado
+// ─────────────────────────────────────────────────────────────
+function Hero({ openQuote }) {
   const bar = [
     { icon: <Building2 size={18} />, label: 'RESIDENTIAL & COMMERCIAL', sub: 'Solutions for homes, businesses and developments.' },
     { icon: <Star size={18} />, label: 'QUALITY EXECUTION', sub: 'High standards and attention to every detail.' },
@@ -69,21 +291,40 @@ function Hero() {
           <span><Mail size={15} /> estimates@escuadrabg.com</span>
         </div>
         <div className="hero-actions">
-          <a href="#projects" className="btn btn-sand">VIEW PROJECTS</a>
-          <a href="#contact" className="btn btn-outline">CONTACT US</a>
+          <button className="btn btn-sand" onClick={openQuote}>SOLICITAR PRESUPUESTO</button>
+          <a href="#projects" className="btn btn-outline">VER PROYECTOS</a>
         </div>
       </motion.div>
-      <div className="hero-panel">
-        {panels.map(p => (
-          <div className="hero-panel-item" key={p.num}>
-            <div className="panel-icon"><Building2 size={20} /></div>
+
+      {/* Category selector card dentro del hero */}
+      <motion.div
+        className="hero-selector"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.7 }}
+      >
+        <p className="hero-selector-label">¿Qué tipo de proyecto?</p>
+        <div className="hero-selector-cards">
+          <button className="hero-sel-card" onClick={openQuote}>
+            <div className="hsc-icon"><Home size={20} /></div>
             <div>
-              <strong>{p.num} — {p.title}</strong>
-              <span>{p.desc}</span>
+              <strong>RESIDENCIAL</strong>
+              <span>Hogares, remodelaciones, acabados</span>
             </div>
-          </div>
-        ))}
-      </div>
+            <ArrowRight size={16} className="hsc-arrow" />
+          </button>
+          <div className="hsc-divider" />
+          <button className="hero-sel-card" onClick={openQuote}>
+            <div className="hsc-icon"><Building2 size={20} /></div>
+            <div>
+              <strong>COMERCIAL</strong>
+              <span>Oficinas, tiendas, restaurantes</span>
+            </div>
+            <ArrowRight size={16} className="hsc-arrow" />
+          </button>
+        </div>
+      </motion.div>
+
       <div className="hero-bar">
         {bar.map(b => (
           <div className="hero-bar-item" key={b.label}>
@@ -99,7 +340,10 @@ function Hero() {
   )
 }
 
-function Services() {
+// ─────────────────────────────────────────────────────────────
+// SERVICES
+// ─────────────────────────────────────────────────────────────
+function Services({ openQuote }) {
   const services = [
     { icon: <Layers size={22} />, title: 'CONCRETE', desc: 'Estructuras sólidas y duraderas. Losas, columnas, vigas y más, con los más altos estándares.' },
     { icon: <Brush size={22} />, title: 'STUCCO', desc: 'Acabados exteriores e interiores con textura y resistencia que realzan cada superficie.' },
@@ -147,7 +391,7 @@ function Services() {
           ))}
         </ul>
         <div className="cta-bar-right">
-          <a href="#contact" className="btn btn-sand">SOLICITA UN PRESUPUESTO <ArrowRight size={15} /></a>
+          <button className="btn btn-sand" onClick={openQuote}>SOLICITA UN PRESUPUESTO <ArrowRight size={15} /></button>
           <p><MessageCircle size={14} /> Hablemos sobre tu proyecto</p>
         </div>
       </div>
@@ -155,7 +399,10 @@ function Services() {
   )
 }
 
-function Projects() {
+// ─────────────────────────────────────────────────────────────
+// PROJECTS
+// ─────────────────────────────────────────────────────────────
+function Projects({ openQuote }) {
   const featured = [
     { type: 'RESIDENCIAL', title: 'Coral Gables Residence', desc: 'Remodelación integral de residencia de lujo. Diseño moderno, acabados premium y atención al detalle en cada espacio.', location: 'Coral Gables, FL', size: '5,200 ft²', year: '2023' },
     { type: 'COMERCIAL', title: 'Brickell Retail Space', desc: 'Construcción y remodelación de espacio comercial. Enfoque en funcionalidad, estética y cumplimiento de plazos.', location: 'Brickell, Miami', size: '3,800 ft²', year: '2024' },
@@ -196,7 +443,7 @@ function Projects() {
                 <span>↗ {p.size}</span>
                 <span>📅 {p.year}</span>
               </div>
-              <a href="#contact" className="btn btn-outline-light">VER PROYECTO →</a>
+              <button className="btn btn-outline-light" onClick={openQuote}>PROYECTO SIMILAR →</button>
             </div>
           </motion.article>
         ))}
@@ -218,12 +465,15 @@ function Projects() {
           <strong>¿Tienes un proyecto en mente?</strong>
           <p>Hablemos de cómo podemos hacerlo realidad con la calidad y precisión que nos caracteriza.</p>
         </div>
-        <a href="#contact" className="btn btn-sand">SOLICITA UN PRESUPUESTO →</a>
+        <button className="btn btn-sand" onClick={openQuote}>SOLICITA UN PRESUPUESTO →</button>
       </div>
     </section>
   )
 }
 
+// ─────────────────────────────────────────────────────────────
+// ABOUT
+// ─────────────────────────────────────────────────────────────
 function About() {
   const cards = [
     { num: '01', title: 'LICENSED & INSURED', desc: 'Contamos con licencia general (CGC) y seguro completo para garantizar operaciones seguras y profesionales.', icon: <ShieldCheck size={26} /> },
@@ -260,6 +510,9 @@ function About() {
   )
 }
 
+// ─────────────────────────────────────────────────────────────
+// CONTACT
+// ─────────────────────────────────────────────────────────────
 function Contact() {
   return (
     <section id="contact" className="contact-section">
@@ -292,7 +545,10 @@ function Contact() {
   )
 }
 
-function ChatBubble() {
+// ─────────────────────────────────────────────────────────────
+// CHAT BUBBLE
+// ─────────────────────────────────────────────────────────────
+function ChatBubble({ openQuote }) {
   const [open, setOpen] = useState(false)
   return (
     <div className={`chat-wrap${open ? ' chat-open' : ''}`}>
@@ -304,10 +560,14 @@ function ChatBubble() {
           </div>
           <button className="chat-close" onClick={() => setOpen(false)}><X size={18} /></button>
         </div>
-        <p className="chat-intro">¿Necesitas un presupuesto, consulta o seguimiento? Respondemos rápido con los próximos pasos.</p>
+        <p className="chat-intro">¿Buscas un presupuesto para un proyecto residencial o comercial? Respondemos rápido.</p>
         <div className="chat-actions">
-          <a href="https://wa.me/18882719092" target="_blank" rel="noreferrer" className="btn chat-btn-primary">Iniciar chat</a>
-          <a href="#contact" className="btn chat-btn-secondary" onClick={() => setOpen(false)}>Solicitar presupuesto</a>
+          <a href="https://wa.me/18882719092" target="_blank" rel="noreferrer" className="btn chat-btn-primary">
+            Iniciar chat
+          </a>
+          <button className="btn chat-btn-secondary" onClick={() => { setOpen(false); openQuote() }}>
+            Solicitar presupuesto
+          </button>
         </div>
       </div>
       <button className={`chat-bubble${open ? ' bubble-open' : ''}`} onClick={() => setOpen(!open)} aria-label="Chat">
@@ -317,13 +577,19 @@ function ChatBubble() {
   )
 }
 
+// ─────────────────────────────────────────────────────────────
+// APP
+// ─────────────────────────────────────────────────────────────
 export default function App() {
+  const [quoteOpen, setQuoteOpen] = useState(false)
+  const openQuote = () => setQuoteOpen(true)
+
   return (
     <>
-      <Header />
-      <Hero />
-      <Services />
-      <Projects />
+      <Header openQuote={openQuote} />
+      <Hero openQuote={openQuote} />
+      <Services openQuote={openQuote} />
+      <Projects openQuote={openQuote} />
       <About />
       <Contact />
       <footer className="footer">
@@ -342,7 +608,10 @@ export default function App() {
           </div>
         </div>
       </footer>
-      <ChatBubble />
+      <ChatBubble openQuote={openQuote} />
+      <AnimatePresence>
+        {quoteOpen && <QuoteWizard onClose={() => setQuoteOpen(false)} />}
+      </AnimatePresence>
     </>
   )
 }
