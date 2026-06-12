@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://escuadra-app.vercel.app/sitemap.xml
+Sitemap: https://www.escuadrabg.com/sitemap.xml
 
 # Crawl-delay (optional, be friendly to crawlers)
 Crawl-delay: 1
