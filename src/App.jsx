@@ -281,7 +281,7 @@ function Hero({ openQuote }) {
   ]
   return (
     <section id="home" className="hero">
-      <img src={hero} alt="Escuadra construction project" className="hero-img" />
+      <img src={hero} alt="Escuadra Builders Group – licensed general contractor Miami FL" className="hero-img" />
       <div className="hero-overlay" />
       <motion.div className="hero-content" initial="hidden" animate="visible" variants={fadeUp}>
         <h1>Structure.<br />Precision.<br />Trust.</h1>
@@ -367,7 +367,7 @@ function Services({ openQuote }) {
         {services.map(s => (
           <motion.article className="service-card" key={s.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
             <div className="service-img">
-              <img src={hero} alt={s.title} />
+              <img src={hero} alt={`${s.title} contractor Miami FL – Escuadra Builders Group`} loading="lazy" />
             </div>
             <div className="service-body">
               <div className="service-icon"><div className="icon-box-dark">{s.icon}</div></div>
@@ -433,7 +433,7 @@ function Projects({ openQuote }) {
       <div className="featured-grid">
         {featured.map(p => (
           <motion.article className="featured-card" key={p.title} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <img src={hero} alt={p.title} />
+            <img src={hero} alt={`${p.title} – ${p.type === 'COMERCIAL' ? 'commercial construction' : 'residential construction'} Miami FL`} loading="lazy" />
             <span className={`type-badge ${p.type === 'COMERCIAL' ? 'badge-comercial' : ''}`}>{p.type}</span>
             <div className="featured-info">
               <h3>{p.title}</h3>
@@ -451,7 +451,7 @@ function Projects({ openQuote }) {
       <div className="gallery-grid">
         {gallery.map(p => (
           <motion.article className="gallery-card" key={p.title} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-            <img src={hero} alt={p.title} />
+            <img src={hero} alt={`${p.title} – ${p.location}`} loading="lazy" />
             <span className="type-badge small">{p.type}</span>
             <div className="gallery-info">
               <h4>{p.title}</h4>
@@ -492,7 +492,7 @@ function About() {
           <a href="#contact" className="btn btn-dark">CONOCE NUESTRO ENFOQUE →</a>
         </motion.div>
         <div className="about-img">
-          <img src={hero} alt="Equipo Escuadra Builders Group" />
+          <img src={hero} alt="Escuadra Builders Group team – construction professionals Miami Florida" />
         </div>
       </div>
       <div className="about-cards">
