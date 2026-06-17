@@ -21,38 +21,69 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } }
 }
 
-// HUD de arquitecto del hero (esquinas tipo visor + datos técnicos)
-const hudWrap = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.16, delayChildren: 0.5 } },
-}
-const hudCorner = {
-  hidden: { opacity: 0, scale: 0.3 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: 'easeOut' } },
-}
-const hudFade = {
-  hidden: { opacity: 0, y: 6 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+// boceto de arquitecto a lápiz del hero — elevación de casa moderna (RoughJS)
+const heroSketchShapes = [
+  // línea de suelo
+  (g, o) => g.line(770, 770, 1380, 770, o),
+  // volumen principal (2 plantas)
+  (g, o) => g.rectangle(900, 360, 380, 410, o),
+  // losa entrepiso
+  (g, o) => g.line(900, 545, 1280, 545, o),
+  // voladizo / alero superior
+  (g, o) => g.line(872, 360, 1300, 360, o),
+  // volumen lateral retranqueado
+  (g, o) => g.rectangle(1280, 470, 150, 300, o),
+  // ventanal planta alta
+  (g, o) => g.rectangle(945, 400, 130, 110, o),
+  // ventanal planta baja (doble altura)
+  (g, o) => g.rectangle(945, 585, 95, 165, o),
+  // puerta de acceso
+  (g, o) => g.rectangle(1150, 620, 70, 150, o),
+  // partición ventanal
+  (g, o) => g.line(1010, 400, 1010, 510, o),
+  // árbol/palmera esquemática
+  (g, o) => g.line(820, 770, 820, 560, o),
+  (g, o) => g.path('M820 560 q-40 -20 -60 -8 M820 560 q40 -22 62 -6 M820 560 q-10 -34 4 -52 M820 560 q22 -30 38 -34', o),
+  // cota inferior + ticks
+  (g, o) => g.line(900, 800, 1280, 800, o),
+  (g, o) => g.line(900, 790, 900, 810, o),
+  (g, o) => g.line(1280, 790, 1280, 810, o),
+]
+const heroDraw = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: (i) => ({
+    pathLength: 1,
+    opacity: 0.62,
+    transition: {
+      pathLength: { delay: 0.5 + i * 0.28, duration: 1.3, ease: 'easeInOut' },
+      opacity: { delay: 0.5 + i * 0.28, duration: 0.4 },
+    },
+  }),
 }
 
 // ── HERO ──────────────────────────────────────────────────────
 function Hero() {
   const openQuote = useQuote()
+  // trazos del boceto dibujados a mano (una sola vez)
+  const heroGroups = useMemo(() => {
+    const gen = rough.generator()
+    const opts = { roughness: 2, bowing: 1.5, strokeWidth: 1.3, disableMultiStroke: false, preserveVertices: false }
+    return heroSketchShapes.map(make => gen.toPaths(make(gen, opts)))
+  }, [])
   return (
     <section id="home" className="hero">
       <img src={hero} alt="Escuadra Builders Group – licensed general contractor Miami FL" className="hero-img" />
       <div className="hero-overlay" />
-      <div className="hero-grid" aria-hidden="true" />
-      <motion.div className="hero-hud" aria-hidden="true" variants={hudWrap} initial="hidden" animate="visible">
-        <motion.span className="hud-corner hud-c-tl" variants={hudCorner} />
-        <motion.span className="hud-corner hud-c-tr" variants={hudCorner} />
-        <motion.span className="hud-corner hud-c-bl" variants={hudCorner} />
-        <motion.span className="hud-corner hud-c-br" variants={hudCorner} />
-        <div className="hud-ruler" />
-        <motion.span className="hud-label hud-l-tr" variants={hudFade}>N 25.7617°&nbsp;&nbsp;W 80.1918°</motion.span>
-        <motion.span className="hud-label hud-l-bl" variants={hudFade}>MIAMI–DADE · FLORIDA</motion.span>
-        <motion.span className="hud-label hud-l-br" variants={hudFade}>LIC. CGC · BONDED &amp; INSURED</motion.span>
-      </motion.div>
+      <motion.svg
+        className="hero-sketch" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"
+        initial="hidden" animate="visible"
+      >
+        {heroGroups.map((paths, gi) =>
+          paths.map((p, pi) => (
+            <motion.path key={`${gi}-${pi}`} d={p.d} custom={gi} variants={heroDraw} strokeWidth={p.strokeWidth || 1.3} />
+          ))
+        )}
+      </motion.svg>
       <motion.div className="hero-content" initial="hidden" animate="visible" variants={fadeUp}>
         <p className="hero-eyebrow">MIAMI-DADE COUNTY, FL</p>
         <h1>We Build Spaces<br />That Stand the<br />Test of Time.</h1>
