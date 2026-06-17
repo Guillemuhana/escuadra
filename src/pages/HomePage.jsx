@@ -50,19 +50,19 @@ const heroSketchShapes = [
   (g, o) => g.line(872, 120, 872, 500, o),
   (g, o) => g.line(862, 120, 882, 120, o),
   (g, o) => g.line(862, 500, 882, 500, o),
-  // ESCUADRA graduada (set square) — triángulo rectángulo
-  (g, o) => g.path('M1000 560 L1320 560 L1000 720 Z', o),
-  // hueco interior de la escuadra
-  (g, o) => g.path('M1038 582 L1240 582 L1038 680 Z', o),
-  // graduación: ticks sobre el borde superior (regla)
+  // ESCUADRA en L (como el logo) — escuadra de carpintero graduada
+  (g, o) => g.path('M1274 540 L1300 540 L1300 700 L1040 700 L1040 674 L1274 674 Z', o),
+  // punto del logo (en el ángulo interior)
+  (g, o) => g.circle(1150, 606, 40, { ...o, fill: 'rgba(238,230,210,0.85)', fillStyle: 'cross-hatch', hachureGap: 3, fillWeight: 1 }),
+  // graduación: ticks sobre el brazo vertical
   (g, o) => g.path(
-    'M1015 560 L1015 547 M1043 560 L1043 547 M1071 560 L1071 547 M1099 560 L1099 547 ' +
-    'M1127 560 L1127 547 M1155 560 L1155 547 M1183 560 L1183 547 M1211 560 L1211 547 ' +
-    'M1239 560 L1239 547 M1267 560 L1267 547 M1295 560 L1295 547', o),
-  // graduación: ticks sobre el cateto vertical
+    'M1300 560 L1288 560 M1300 578 L1288 578 M1300 596 L1288 596 M1300 614 L1288 614 ' +
+    'M1300 632 L1288 632 M1300 650 L1288 650 M1300 668 L1288 668 M1300 686 L1288 686', o),
+  // graduación: ticks sobre el brazo horizontal
   (g, o) => g.path(
-    'M1000 582 L1013 582 M1000 604 L1013 604 M1000 626 L1013 626 ' +
-    'M1000 648 L1013 648 M1000 670 L1013 670 M1000 692 L1013 692', o),
+    'M1070 700 L1070 688 M1090 700 L1090 688 M1110 700 L1110 688 M1130 700 L1130 688 ' +
+    'M1150 700 L1150 688 M1170 700 L1170 688 M1190 700 L1190 688 M1210 700 L1210 688 ' +
+    'M1230 700 L1230 688 M1250 700 L1250 688 M1270 700 L1270 688 M1290 700 L1290 688', o),
 ]
 const heroDraw = {
   hidden: { pathLength: 0, opacity: 0 },
