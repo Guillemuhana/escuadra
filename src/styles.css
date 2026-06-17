@@ -49,7 +49,9 @@ p { line-height: 1.75; }
   border-bottom: 1px solid var(--line-dark);
 }
 .brand { display: flex; align-items: center; gap: 12px; }
-.brand-logo-full { height: 54px; width: auto; max-width: 230px; object-fit: contain; display: block; }
+.brand-mark { width: 44px; height: 44px; display: grid; place-items: center; flex-shrink: 0; }
+.brand-mark-svg { width: 100%; height: 100%; fill: #fff; transition: fill 0.25s ease, transform 0.4s ease; }
+.brand:hover .brand-mark-svg { fill: var(--gold); transform: rotate(-3deg); }
 .brand-logo { width: 48px; height: 48px; border-radius: 14px; background: rgba(255,255,255,0.08); display: grid; place-items: center; overflow: hidden; }
 .brand-logo img { width: 100%; height: 100%; object-fit: contain; }
 .brand-copy span { display: block; font-size: 13px; font-weight: 900; letter-spacing: 4px; color: #fff; }

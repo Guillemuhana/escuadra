@@ -2,7 +2,20 @@ import { useState, useRef, useEffect } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { useQuote } from '../App'
-import logo from '../assets/logo-header.png'
+
+// marca "escuadra" (set square + punto) reproducida en SVG vectorial
+function EscuadraMark() {
+  return (
+    <svg viewBox="0 0 64 64" className="brand-mark-svg" aria-hidden="true">
+      {/* barra vertical (derecha) */}
+      <rect x="40" y="6" width="12" height="52" />
+      {/* barra horizontal (base) */}
+      <rect x="8" y="46" width="44" height="12" />
+      {/* punto */}
+      <circle cx="27" cy="31" r="5.6" />
+    </svg>
+  )
+}
 
 const SERVICES_MENU = [
   { label: 'Residential Construction', to: '/residential' },
@@ -39,8 +52,12 @@ export default function Header() {
 
   return (
     <header className="header">
-      <Link to="/" className="brand">
-        <img src={logo} alt="Escuadra Builders Group" className="brand-logo-full" />
+      <Link to="/" className="brand" aria-label="Escuadra Builders Group – home">
+        <span className="brand-mark"><EscuadraMark /></span>
+        <div className="brand-copy">
+          <span>ESCUADRA</span>
+          <p>BUILDERS GROUP</p>
+        </div>
       </Link>
 
       <nav className={`nav${mobileOpen ? ' nav-open' : ''}`}>
