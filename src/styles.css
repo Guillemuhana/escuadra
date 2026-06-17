@@ -516,6 +516,10 @@ p { line-height: 1.75; }
 .footer-main { display: grid; grid-template-columns: 2fr 1fr 1fr 1.4fr; gap: 60px; padding: 72px 5vw 48px; }
 .footer-brand-col .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
 .footer-brand img { width: 40px; height: 40px; border-radius: 12px; object-fit: contain; background: rgba(255,255,255,0.06); }
+.footer-brand-col .footer-brand .footer-logo-glass {
+  width: 100%; max-width: 340px; height: auto;
+  border-radius: 14px; background: transparent; object-fit: contain;
+}
 .footer-brand span { display: block; font-size: 13px; font-weight: 900; letter-spacing: 3px; color: #fff; }
 .footer-brand p { font-size: 9px; letter-spacing: 2px; color: rgba(255,255,255,0.45); text-transform: uppercase; margin-top: 2px; }
 .footer-tagline { font-size: 13px; line-height: 1.8; color: rgba(255,255,255,0.5); margin-bottom: 20px; }

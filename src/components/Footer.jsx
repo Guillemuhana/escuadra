@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Phone, Mail, MapPin } from 'lucide-react'
-import logo from '../assets/logo-glass.png'
+import logo from '../assets/logo-footer.png'
 
 export default function Footer() {
   return (
@@ -8,11 +8,7 @@ export default function Footer() {
       <div className="footer-main">
         <div className="footer-brand-col">
           <div className="footer-brand">
-            <img src={logo} alt="Escuadra Builders Group" />
-            <div>
-              <span>ESCUADRA</span>
-              <p>BUILDERS GROUP</p>
-            </div>
+            <img src={logo} alt="Escuadra Builders Group" className="footer-logo-glass" />
           </div>
           <p className="footer-tagline">
             Building exceptional spaces with integrity, precision, and passion.
