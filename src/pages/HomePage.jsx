@@ -50,6 +50,19 @@ const heroSketchShapes = [
   (g, o) => g.line(872, 120, 872, 500, o),
   (g, o) => g.line(862, 120, 882, 120, o),
   (g, o) => g.line(862, 500, 882, 500, o),
+  // ESCUADRA graduada (set square) — triángulo rectángulo
+  (g, o) => g.path('M1000 560 L1320 560 L1000 720 Z', o),
+  // hueco interior de la escuadra
+  (g, o) => g.path('M1038 582 L1240 582 L1038 680 Z', o),
+  // graduación: ticks sobre el borde superior (regla)
+  (g, o) => g.path(
+    'M1015 560 L1015 547 M1043 560 L1043 547 M1071 560 L1071 547 M1099 560 L1099 547 ' +
+    'M1127 560 L1127 547 M1155 560 L1155 547 M1183 560 L1183 547 M1211 560 L1211 547 ' +
+    'M1239 560 L1239 547 M1267 560 L1267 547 M1295 560 L1295 547', o),
+  // graduación: ticks sobre el cateto vertical
+  (g, o) => g.path(
+    'M1000 582 L1013 582 M1000 604 L1013 604 M1000 626 L1013 626 ' +
+    'M1000 648 L1013 648 M1000 670 L1013 670 M1000 692 L1013 692', o),
 ]
 const heroDraw = {
   hidden: { pathLength: 0, opacity: 0 },
