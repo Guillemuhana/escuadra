@@ -8,6 +8,11 @@ import {
 import { useQuote } from '../App'
 import hero from '../assets/hero-escuadra.jpeg'
 import logo from '../assets/logo-escuadra.jpeg'
+import projBeachHouse from '../assets/project-beach-house.png'
+import projCoconutGrove from '../assets/project-coconut-grove.png'
+import projLuxuryReno from '../assets/project-luxury-renovation.png'
+import projOffice from '../assets/project-office-buildout.png'
+import aboutTeam from '../assets/about-team.png'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -108,10 +113,10 @@ function WhatWeDo() {
 function FeaturedProjects() {
   const openQuote = useQuote()
   const projects = [
-    { title: 'Modern Beach House', location: 'Miami Beach, FL', type: 'RESIDENTIAL' },
-    { title: 'Coconut Grove Residence', location: 'Coconut Grove, FL', type: 'RESIDENTIAL' },
-    { title: 'Luxury Renovation', location: 'Coral Gables, FL', type: 'RESIDENTIAL' },
-    { title: 'Downtown Office Build-Out', location: 'Brickell, FL', type: 'COMMERCIAL' },
+    { title: 'Modern Beach House', location: 'Miami Beach, FL', type: 'RESIDENTIAL', img: projBeachHouse },
+    { title: 'Coconut Grove Residence', location: 'Coconut Grove, FL', type: 'RESIDENTIAL', img: projCoconutGrove },
+    { title: 'Luxury Renovation', location: 'Coral Gables, FL', type: 'RESIDENTIAL', img: projLuxuryReno },
+    { title: 'Downtown Office Build-Out', location: 'Brickell, FL', type: 'COMMERCIAL', img: projOffice },
   ]
   return (
     <section id="projects" className="featured-projects-section">
@@ -125,7 +130,7 @@ function FeaturedProjects() {
       <div className="fp-grid">
         {projects.map(p => (
           <motion.article key={p.title} className="fp-card" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <img src={hero} alt={`${p.title} – ${p.type === 'COMMERCIAL' ? 'commercial construction' : 'residential construction'} Miami FL`} loading="lazy" />
+            <img src={p.img} alt={`${p.title} – ${p.type === 'COMMERCIAL' ? 'commercial construction' : 'residential construction'} Miami FL`} loading="lazy" />
             <span className={`fp-badge${p.type === 'COMMERCIAL' ? ' fp-badge-comm' : ''}`}>{p.type}</span>
             <div className="fp-info">
               <h4>{p.title}</h4>
@@ -158,7 +163,7 @@ function About() {
           <a href="#contact" className="btn btn-dark">LEARN MORE ABOUT US →</a>
         </motion.div>
         <div className="about-img">
-          <img src={hero} alt="Escuadra Builders Group team – construction professionals Miami Florida" />
+          <img src={aboutTeam} alt="Escuadra Builders Group team – construction professionals Miami Florida" />
         </div>
       </div>
     </section>

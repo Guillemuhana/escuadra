@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Phone, Mail, MapPin } from 'lucide-react'
-import logo from '../assets/logo-escuadra.jpeg'
+import logo from '../assets/logo-glass.png'
 
 export default function Footer() {
   return (
