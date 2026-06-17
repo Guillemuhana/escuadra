@@ -21,6 +21,24 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } }
 }
 
+// trazos tipo plano de obra que se dibujan en el hero (lado derecho)
+const heroLines = [
+  // torre principal
+  'M1000 760 L1000 360 L1190 360 L1190 760',
+  // pisos
+  'M1000 430 L1190 430', 'M1000 500 L1190 500', 'M1000 570 L1190 570', 'M1000 640 L1190 640', 'M1000 710 L1190 710',
+  // columna central
+  'M1095 360 L1095 760',
+  // grúa: mástil + brazo + contrabrazo + gancho
+  'M1255 760 L1255 250',
+  'M1150 290 L1360 290',
+  'M1255 250 L1360 290 L1150 290 L1255 250',
+  'M1320 290 L1320 370',
+  'M1305 370 L1335 370 L1335 392 L1305 392 Z',
+  // cota inferior
+  'M1000 800 L1190 800', 'M1000 790 L1000 810', 'M1190 790 L1190 810',
+]
+
 // ── HERO ──────────────────────────────────────────────────────
 function Hero() {
   const openQuote = useQuote()
@@ -28,6 +46,22 @@ function Hero() {
     <section id="home" className="hero">
       <img src={hero} alt="Escuadra Builders Group – licensed general contractor Miami FL" className="hero-img" />
       <div className="hero-overlay" />
+      <div className="hero-grid" aria-hidden="true" />
+      <svg className="hero-blueprint" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        {heroLines.map((d, i) => (
+          <motion.path
+            key={i}
+            d={d}
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 0.55 }}
+            transition={{
+              pathLength: { delay: 0.6 + i * 0.25, duration: 1.6, ease: 'easeInOut' },
+              opacity: { delay: 0.6 + i * 0.25, duration: 0.4 },
+            }}
+          />
+        ))}
+      </svg>
+      <span className="hero-scan" aria-hidden="true" />
       <motion.div className="hero-content" initial="hidden" animate="visible" variants={fadeUp}>
         <p className="hero-eyebrow">MIAMI-DADE COUNTY, FL</p>
         <h1>We Build Spaces<br />That Stand the<br />Test of Time.</h1>
