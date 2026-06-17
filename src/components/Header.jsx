@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { useQuote } from '../App'
-import logo from '../assets/logo-escuadra.jpeg'
+import logo from '../assets/logo-header.png'
 
 const SERVICES_MENU = [
   { label: 'Residential Construction', to: '/residential' },
@@ -40,11 +40,7 @@ export default function Header() {
   return (
     <header className="header">
       <Link to="/" className="brand">
-        <div className="brand-logo"><img src={logo} alt="Escuadra Builders Group" /></div>
-        <div className="brand-copy">
-          <span>ESCUADRA</span>
-          <p>BUILDERS GROUP</p>
-        </div>
+        <img src={logo} alt="Escuadra Builders Group" className="brand-logo-full" />
       </Link>
 
       <nav className={`nav${mobileOpen ? ' nav-open' : ''}`}>
