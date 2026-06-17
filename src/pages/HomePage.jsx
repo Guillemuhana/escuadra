@@ -12,7 +12,7 @@ import projBeachHouse from '../assets/project-beach-house.png'
 import projCoconutGrove from '../assets/project-coconut-grove.png'
 import projLuxuryReno from '../assets/project-luxury-renovation.png'
 import projOffice from '../assets/project-office-buildout.png'
-import aboutTeam from '../assets/about-team.png'
+import aboutTeam from '../assets/about-render.png'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -147,6 +147,33 @@ function FeaturedProjects() {
 }
 
 // ── ABOUT ──────────────────────────────────────────────────────
+// trazos del boceto: se "dibujan" en orden con Framer Motion (pathLength)
+const sketchStrokes = [
+  { el: 'rect', props: { x: 22, y: 22, width: 556, height: 476, rx: 2 } },
+  { el: 'line', props: { x1: 22, y1: 150, x2: 578, y2: 150 } },
+  { el: 'line', props: { x1: 22, y1: 370, x2: 578, y2: 370 } },
+  { el: 'line', props: { x1: 300, y1: 498, x2: 578, y2: 200 } },
+  { el: 'line', props: { x1: 300, y1: 498, x2: 300, y2: 150 } },
+  { el: 'path', props: { d: 'M330 360 L330 210 L470 170 L470 360 Z' } },
+  { el: 'path', props: { d: 'M330 210 L400 175 L470 170' } },
+  { el: 'path', props: { d: 'M360 360 L360 290 L400 290 L400 360' } },
+  { el: 'line', props: { x1: 60, y1: 450, x2: 240, y2: 450 } },
+  { el: 'line', props: { x1: 60, y1: 442, x2: 60, y2: 458 } },
+  { el: 'line', props: { x1: 240, y1: 442, x2: 240, y2: 458 } },
+]
+
+const drawVariant = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: (i) => ({
+    pathLength: 1,
+    opacity: 1,
+    transition: {
+      pathLength: { delay: 0.2 + i * 0.45, duration: 1.1, ease: 'easeInOut' },
+      opacity: { delay: 0.2 + i * 0.45, duration: 0.25 },
+    },
+  }),
+}
+
 function About() {
   const checks = ['Licensed & Insured', 'Quality Craftsmanship', 'On-Time Delivery', 'Transparent Communication']
   return (
@@ -162,8 +189,17 @@ function About() {
           </ul>
           <a href="#contact" className="btn btn-dark">LEARN MORE ABOUT US →</a>
         </motion.div>
-        <div className="about-img">
+        <div className="about-img about-img-draw">
           <img src={aboutTeam} alt="Escuadra Builders Group team – construction professionals Miami Florida" />
+          <motion.svg
+            className="about-sketch" viewBox="0 0 600 520" preserveAspectRatio="none" aria-hidden="true"
+            initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.4 }}
+          >
+            {sketchStrokes.map((s, i) => {
+              const Tag = motion[s.el]
+              return <Tag key={i} {...s.props} custom={i} variants={drawVariant} />
+            })}
+          </motion.svg>
         </div>
       </div>
     </section>
