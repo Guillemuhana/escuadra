@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import rough from 'roughjs/bin/rough'
 import { Link } from 'react-router-dom'
@@ -85,12 +85,24 @@ function Hero() {
     const opts = { roughness: 2, bowing: 1.5, strokeWidth: 1.3, disableMultiStroke: false, preserveVertices: false }
     return heroSketchShapes.map(make => gen.toPaths(make(gen, opts)))
   }, [])
+  // en mobile recortamos el viewBox a la zona dibujada para que se aprecie completa
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 720px)')
+    const update = () => setIsMobile(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
   return (
     <section id="home" className="hero">
       <img src={hero} alt="Escuadra Builders Group – licensed general contractor Miami FL" className="hero-img" />
       <div className="hero-overlay" />
       <motion.svg
-        className="hero-sketch" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"
+        className="hero-sketch"
+        viewBox={isMobile ? '840 60 560 760' : '0 0 1440 900'}
+        preserveAspectRatio={isMobile ? 'xMidYMid meet' : 'xMidYMid slice'}
+        aria-hidden="true"
         initial="hidden" animate="visible"
       >
         {heroGroups.map((paths, gi) =>
