@@ -1,4 +1,6 @@
+import { useMemo } from 'react'
 import { motion } from 'framer-motion'
+import rough from 'roughjs/bin/rough'
 import { Link } from 'react-router-dom'
 import {
   Home, Building2, ClipboardList, ArrowRight, Phone, Mail, MapPin,
@@ -147,19 +149,19 @@ function FeaturedProjects() {
 }
 
 // ── ABOUT ──────────────────────────────────────────────────────
-// trazos del boceto: se "dibujan" en orden con Framer Motion (pathLength)
-const sketchStrokes = [
-  { el: 'rect', props: { x: 22, y: 22, width: 556, height: 476, rx: 2 } },
-  { el: 'line', props: { x1: 22, y1: 150, x2: 578, y2: 150 } },
-  { el: 'line', props: { x1: 22, y1: 370, x2: 578, y2: 370 } },
-  { el: 'line', props: { x1: 300, y1: 498, x2: 578, y2: 200 } },
-  { el: 'line', props: { x1: 300, y1: 498, x2: 300, y2: 150 } },
-  { el: 'path', props: { d: 'M330 360 L330 210 L470 170 L470 360 Z' } },
-  { el: 'path', props: { d: 'M330 210 L400 175 L470 170' } },
-  { el: 'path', props: { d: 'M360 360 L360 290 L400 290 L400 360' } },
-  { el: 'line', props: { x1: 60, y1: 450, x2: 240, y2: 450 } },
-  { el: 'line', props: { x1: 60, y1: 442, x2: 60, y2: 458 } },
-  { el: 'line', props: { x1: 240, y1: 442, x2: 240, y2: 458 } },
+// formas del boceto — RoughGenerator las convierte en trazos "a mano" (estilo lápiz)
+const sketchShapes = [
+  (g, o) => g.rectangle(22, 22, 556, 476, o),
+  (g, o) => g.line(22, 150, 578, 150, o),
+  (g, o) => g.line(22, 370, 578, 370, o),
+  (g, o) => g.line(300, 498, 578, 200, o),
+  (g, o) => g.line(300, 498, 300, 150, o),
+  (g, o) => g.path('M330 360 L330 210 L470 170 L470 360 Z', o),
+  (g, o) => g.path('M330 210 L400 175 L470 170', o),
+  (g, o) => g.path('M360 360 L360 290 L400 290 L400 360', o),
+  (g, o) => g.line(60, 450, 240, 450, o),
+  (g, o) => g.line(60, 442, 60, 458, o),
+  (g, o) => g.line(240, 442, 240, 458, o),
 ]
 
 const drawVariant = {
@@ -168,14 +170,20 @@ const drawVariant = {
     pathLength: 1,
     opacity: 1,
     transition: {
-      pathLength: { delay: 0.2 + i * 0.45, duration: 1.1, ease: 'easeInOut' },
-      opacity: { delay: 0.2 + i * 0.45, duration: 0.25 },
+      pathLength: { delay: 0.2 + i * 0.4, duration: 1.05, ease: 'easeInOut' },
+      opacity: { delay: 0.2 + i * 0.4, duration: 0.3 },
     },
   }),
 }
 
 function About() {
   const checks = ['Licensed & Insured', 'Quality Craftsmanship', 'On-Time Delivery', 'Transparent Communication']
+  // genera los trazos dibujados a mano una sola vez
+  const sketchGroups = useMemo(() => {
+    const gen = rough.generator()
+    const opts = { roughness: 1.9, bowing: 1.6, strokeWidth: 1.4, disableMultiStroke: false, preserveVertices: false }
+    return sketchShapes.map(make => gen.toPaths(make(gen, opts)))
+  }, [])
   return (
     <section id="about" className="about-section">
       <div className="about-main">
@@ -195,10 +203,17 @@ function About() {
             className="about-sketch" viewBox="0 0 600 520" preserveAspectRatio="none" aria-hidden="true"
             initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.4 }}
           >
-            {sketchStrokes.map((s, i) => {
-              const Tag = motion[s.el]
-              return <Tag key={i} {...s.props} custom={i} variants={drawVariant} />
-            })}
+            {sketchGroups.map((paths, gi) =>
+              paths.map((p, pi) => (
+                <motion.path
+                  key={`${gi}-${pi}`}
+                  d={p.d}
+                  custom={gi}
+                  variants={drawVariant}
+                  strokeWidth={p.strokeWidth || 1.4}
+                />
+              ))
+            )}
           </motion.svg>
         </div>
       </div>
