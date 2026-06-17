@@ -21,33 +21,35 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } }
 }
 
-// boceto de arquitecto a lápiz del hero — elevación de casa moderna (RoughJS)
+// boceto de arquitecto a lápiz del hero — PLANTA (vista cenital) (RoughJS)
 const heroSketchShapes = [
-  // línea de suelo
-  (g, o) => g.line(770, 770, 1380, 770, o),
-  // volumen principal (2 plantas)
-  (g, o) => g.rectangle(900, 360, 380, 410, o),
-  // losa entrepiso
-  (g, o) => g.line(900, 545, 1280, 545, o),
-  // voladizo / alero superior
-  (g, o) => g.line(872, 360, 1300, 360, o),
-  // volumen lateral retranqueado
-  (g, o) => g.rectangle(1280, 470, 150, 300, o),
-  // ventanal planta alta
-  (g, o) => g.rectangle(945, 400, 130, 110, o),
-  // ventanal planta baja (doble altura)
-  (g, o) => g.rectangle(945, 585, 95, 165, o),
-  // puerta de acceso
-  (g, o) => g.rectangle(1150, 620, 70, 150, o),
-  // partición ventanal
-  (g, o) => g.line(1010, 400, 1010, 510, o),
-  // árbol/palmera esquemática
-  (g, o) => g.line(820, 770, 820, 560, o),
-  (g, o) => g.path('M820 560 q-40 -20 -60 -8 M820 560 q40 -22 62 -6 M820 560 q-10 -34 4 -52 M820 560 q22 -30 38 -34', o),
-  // cota inferior + ticks
-  (g, o) => g.line(900, 800, 1280, 800, o),
-  (g, o) => g.line(900, 790, 900, 810, o),
-  (g, o) => g.line(1280, 790, 1280, 810, o),
+  // muro perimetral
+  (g, o) => g.rectangle(900, 120, 430, 380, o),
+  // tabique vertical (divide ala derecha)
+  (g, o) => g.line(1150, 120, 1150, 500, o),
+  // tabique horizontal ala izquierda
+  (g, o) => g.line(900, 320, 1150, 320, o),
+  // tabique horizontal ala derecha
+  (g, o) => g.line(1150, 380, 1330, 380, o),
+  // barrido de puerta 1
+  (g, o) => g.arc(1150, 460, 130, 130, Math.PI, Math.PI * 1.5, false, o),
+  // barrido de puerta 2
+  (g, o) => g.arc(975, 320, 120, 120, Math.PI * 1.5, Math.PI * 2, false, o),
+  // mobiliario (sofá/cama)
+  (g, o) => g.rectangle(940, 360, 120, 95, o),
+  // escalera (peldaños) ala inferior derecha
+  (g, o) => g.line(1180, 410, 1310, 410, o),
+  (g, o) => g.line(1180, 430, 1310, 430, o),
+  (g, o) => g.line(1180, 450, 1310, 450, o),
+  (g, o) => g.line(1180, 470, 1310, 470, o),
+  // cota superior + ticks
+  (g, o) => g.line(900, 92, 1330, 92, o),
+  (g, o) => g.line(900, 82, 900, 102, o),
+  (g, o) => g.line(1330, 82, 1330, 102, o),
+  // cota lateral izquierda + ticks
+  (g, o) => g.line(872, 120, 872, 500, o),
+  (g, o) => g.line(862, 120, 882, 120, o),
+  (g, o) => g.line(862, 500, 882, 500, o),
 ]
 const heroDraw = {
   hidden: { pathLength: 0, opacity: 0 },
