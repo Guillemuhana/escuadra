@@ -21,6 +21,10 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } }
 }
 
+// círculo dibujado como path (para que se anime con el mismo trazo "a mano")
+const circ = (cx, cy, r) =>
+  `M${cx - r} ${cy} a${r} ${r} 0 1 0 ${r * 2} 0 a${r} ${r} 0 1 0 ${-r * 2} 0 `
+
 // boceto de arquitecto a lápiz del hero — PLANTA (vista cenital) (RoughJS)
 const heroSketchShapes = [
   // muro perimetral
@@ -63,6 +67,40 @@ const heroSketchShapes = [
     'M1070 700 L1070 688 M1090 700 L1090 688 M1110 700 L1110 688 M1130 700 L1130 688 ' +
     'M1150 700 L1150 688 M1170 700 L1170 688 M1190 700 L1190 688 M1210 700 L1210 688 ' +
     'M1230 700 L1230 688 M1250 700 L1250 688 M1270 700 L1270 688 M1290 700 L1290 688', o),
+
+  // ── elementos de plano arquitectónico ──────────────────────────
+  // grilla estructural: ejes verticales (A·B·C) y horizontales (1·2·3)
+  (g, o) => g.path(
+    'M980 88 L980 512 M1115 88 L1115 512 M1250 88 L1250 512 ' +   // ejes verticales
+    'M868 180 L1346 180 M868 310 L1346 310 M868 440 L1346 440', o), // ejes horizontales
+  // burbujas de referencia de ejes (estructura)
+  (g, o) => g.path(
+    circ(980, 74, 13) + circ(1115, 74, 13) + circ(1250, 74, 13) +   // ejes verticales (arriba)
+    circ(856, 180, 13) + circ(856, 310, 13) + circ(856, 440, 13), o), // ejes horizontales (izq.)
+  // pilares (columnas) en los cruces de ejes
+  (g, o) => g.path(
+    'M972 172 L988 172 L988 188 L972 188 Z M1107 172 L1123 172 L1123 188 L1107 188 Z M1242 172 L1258 172 L1258 188 L1242 188 Z ' +
+    'M972 302 L988 302 L988 318 L972 318 Z M1107 302 L1123 302 L1123 318 L1107 318 Z M1242 302 L1258 302 L1258 318 L1242 318 Z ' +
+    'M972 432 L988 432 L988 448 L972 448 Z M1107 432 L1123 432 L1123 448 L1107 448 Z M1242 432 L1258 432 L1258 448 L1242 448 Z',
+    { ...o, fill: 'rgba(238,230,210,0.85)', fillStyle: 'cross-hatch', hachureGap: 2.5, fillWeight: 0.8 }),
+  // ventanas en los muros (símbolo de doble línea)
+  (g, o) => g.path(
+    'M1015 116 L1075 116 M1015 124 L1075 124 ' +   // ventana muro superior
+    'M896 230 L896 290 M904 230 L904 290', o),     // ventana muro izquierdo
+  // rosa de los vientos / flecha de Norte
+  (g, o) => g.path(
+    circ(1372, 156, 26) +                            // círculo
+    'M1372 178 L1372 130 ' +                         // asta
+    'M1362 144 L1372 126 L1382 144 ' +               // punta
+    'M1364 120 L1364 106 L1378 120 L1378 106', o),   // letra N
+  // escala gráfica: marco y divisiones
+  (g, o) => g.path(
+    'M900 560 L1080 560 L1080 576 L900 576 Z ' +
+    'M945 560 L945 576 M990 560 L990 576 M1035 560 L1035 576', o),
+  // escala gráfica: segmentos rellenos (alternados)
+  (g, o) => g.path(
+    'M900 560 L945 560 L945 576 L900 576 Z M990 560 L1035 560 L1035 576 L990 576 Z',
+    { ...o, fill: 'rgba(238,230,210,0.75)', fillStyle: 'cross-hatch', hachureGap: 2.5, fillWeight: 0.8 }),
 ]
 const heroDraw = {
   hidden: { pathLength: 0, opacity: 0 },
@@ -70,8 +108,8 @@ const heroDraw = {
     pathLength: 1,
     opacity: 0.62,
     transition: {
-      pathLength: { delay: 0.5 + i * 0.28, duration: 1.3, ease: 'easeInOut' },
-      opacity: { delay: 0.5 + i * 0.28, duration: 0.4 },
+      pathLength: { delay: 0.5 + i * 0.2, duration: 1.2, ease: 'easeInOut' },
+      opacity: { delay: 0.5 + i * 0.2, duration: 0.4 },
     },
   }),
 }
